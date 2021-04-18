@@ -1,0 +1,84 @@
+#clusterMap {
+    height: 400px;
+    width: 100%;
+}
+
+#map {
+    height: 100%;
+}
+
+#mapContainer {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+#reviewFormCard {
+    height: 45%;
+}
+
+#allCampgrounds {
+    position: relative;
+    top: 495px;
+}
+
+#campgroundDescription {
+    min-height: 200px;
+}
+
+#navbarUserDropdown {
+    width: 35px;
+    height: 35px;
+}
+
+@media screen and (max-width: 1200px) {
+    #campgroundDescription {
+        min-height: 300px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    #map {
+        min-height: 500px;
+    }
+    #reviewFormCard {
+        min-height: 400px;
+    }
+    #campgroundDescription {
+        min-height: 150px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #campgroundDescription {
+        min-height: 200px;
+    }
+}
+
+.alert {
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    top: 50px;
+    z-index: 2;
+}
+
+/* #reviewBody:focus {
+    border
+} */
+
+textarea {
+    resize: none;
+}
+
+.w-45 {
+    width: 45%;
+}
+
+.max-h-500px {
+    max-height: 500px;
+}
+
+.min-h-400px {
+    min-height: 400px;
+}

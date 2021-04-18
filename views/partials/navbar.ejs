@@ -1,0 +1,36 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">YelpCamp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/campgrounds">Campgrounds</a>
+                <a class="nav-link" href="/campgrounds/new">Add Campground</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if (currentUser) { %> 
+                <li class="nav-item dropdown">
+                    <a class="nav-link d-lg-flex bg-secondary fw-bold d-none rounded-circle p-0 justify-content-center align-items-center" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fa-2x"></i>
+                    </a>
+                    <a class="nav-link d-lg-none d-block" href="#" id="navbarUserDropdownPortrait" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        My Account
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                        <li><span class="dropdown-item-text text-muted text-center" href="#"><i><%= currentUser.username %> </i></span></li>
+                        <li><a class="dropdown-item" href="/campgrounds/owned">My Campgrounds</a></li>
+                        <li><a class="dropdown-item" href="/logout">Log out</a></li>
+                    </ul>
+                </li>
+                <% } else { %> 
+                <a class="nav-link" href="/register">Sign up</a>
+                <a class="nav-link" href="/login">Log in</a>
+                <% } %> 
+            </div>
+        </div>
+    </div>
+</nav>

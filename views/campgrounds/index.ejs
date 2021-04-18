@@ -1,0 +1,151 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="mb-5 text-center">Campgrounds</h1>
+
+        <div class="container-fluid p-0 bg-light border">
+        <form action="" method="POST" id="filterForm">
+            <div class="container-fluid pt-2 px-4">
+                <div class="row gx-3">
+                    <div class="col-md-5 order-1 mb-3">
+                        <div>Name</div>
+                        <input class="form-control" type="text" name="titleFilter" id="titleFilter" placeholder="Name of Campground">
+                    </div>
+                    <div class="col-md-4 order-2 order-md-1 mt-auto mb-3">
+                        <button class="accordion-button collapsed pt-1 pb-2 px-2 border rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            More Filters
+                        </button>
+                    </div>
+                    <div class="col-md-3 order-1 mt-auto d-flex justify-content-between justify-content-md-end mb-3">
+                        <button class="btn btn-primary w-45 me-0 me-md-3">Filter</button>
+                        <button type="button" class="btn btn-secondary w-45" name="resetFilters" id="resetFilters">Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordian">
+                <div class="accordion-item rounded-0 border-0">
+                    <h2 class="accordion-header" id="headingTwo">
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                      <div class="accordion-body p-0 bg-light">
+                        <div class="container-fluid px-4 py-3">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div>Location</div>
+                                    <input class="form-control" type="text" name="locationFilter" id="locationFilter" placeholder="Location of Campground">
+                                </div>
+                                <div class="col-6 col-sm-3 col-md-2">
+                                    <div>Max Price</div>
+                                    <input class="form-control" type="number" name="maxPriceFilter" id="maxPriceFilter" placeholder="$">
+                                </div>
+                                <div class="col-6 col-sm-3 col-md-2">
+                                    <div>Min Price</div>
+                                    <input class="form-control" type="number" name="minPriceFilter" id="minPriceFilter" placeholder="$">
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+        </form>
+        </div>
+
+    <div class="container-fluid">
+    <div class="row" id="campContainer">
+    <% for(let campground of campgrounds) { %>
+        <div class="card my-3 order-1" id="id<%= campground._id %>">
+            <div class="row">
+                <div class="col-12 col-md-5 col-lg-4 col-xl-3 text-center text-lg-start p-0">
+                    <% if(campground.images.length) { %> 
+                        <img class="img-fluid" src="<%= campground.images[0].cardImage %> " alt="Campground Image">
+                    <% } else { %> 
+                        <img src="" alt="">
+                    <% } %> 
+                </div>
+                <div class=" col-md-7 col-lg-8 col-xl-9 p-0">
+                    <div class="card-body h-100 d-flex flex-column">
+                        <h5 class="card-title mb-2"><%= campground.title %>
+                            <% if(campground.reviews.length)  { %> 
+                                <span class="float-end">Rating: <span class="badge bg-secondary rounded-pill">
+                                <%= campground.properties.avgRating %> 
+                                </span></span>
+                            <% } %> 
+                        </h5>
+                        <p class="card-text mb-2 mb-lg-3">
+                            <small class="text-muted"><%= campground.location %></small>
+                        </p>
+                        <p class="card-text mb-2 mb-lg-3"><%= campground.properties.shortDescription %> </p>
+                        <p class="card-text mb-2 float-right">
+                            <strong >$<%= campground.price %> / night</strong>
+                        </p>
+                        <div class="mt-auto">
+                            <a class="btn btn-primary" href="/campgrounds/<%= campground._id %> ">Show More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %> 
+    </div>
+    </div>
+
+<script>
+    const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
+    const campgrounds = {features: <%- JSON.stringify(campgrounds) %>};
+
+    const campImages = document.querySelectorAll('#campContainer img');
+    let testBool = true;
+
+    const filterForm = document.querySelector('#filterForm');
+    const resetFiltersBtn = document.querySelector('#resetFilters');
+
+    window.addEventListener('resize', function(event) {
+        if(window.innerWidth <= 768 && testBool){
+            campImages.forEach(img => {
+                let imgSource = img.attributes.src.value;
+                imgSource = imgSource.replace('/upload/c_fill,w_300,h_300', '/upload');
+                img.setAttribute('src', imgSource);
+            })
+            testBool = !testBool;
+        }
+        if(window.innerWidth > 768 && !testBool){
+            campImages.forEach(img => {
+                let imgSource = img.attributes.src.value;
+                imgSource = imgSource.replace('/upload', '/upload/c_fill,w_300,h_300');
+                img.setAttribute('src', imgSource);
+            })
+            testBool = !testBool;
+        }
+    })
+
+    filterForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let campsToRender = filterCamps(
+            event.target.titleFilter.value,
+            event.target.locationFilter.value,
+            event.target.maxPriceFilter.value,
+            event.target.minPriceFilter.value,
+            campgrounds.features
+            );
+        for (let campground of campgrounds.features) {
+            let campgroundDom = document.querySelector(`#id${campground._id}`);
+            campgroundDom.classList.add('d-none');
+        }
+        for (let campground of campsToRender.results) {
+            let campgroundDom = document.querySelector(`#id${campground._id}`);
+            campgroundDom.classList.remove('d-none');
+        }
+    })
+
+    resetFiltersBtn.addEventListener('click', function(event) {
+        for (let campground of campgrounds.features) {
+            let campgroundDom = document.querySelector(`#id${campground._id}`);
+            campgroundDom.classList.remove('d-none');
+            filterForm.reset();
+        }
+    })
+
+</script>
+
+<script src="/javascript/clusterMap.js"></script>
+<script src="/javascript/filterCamps.js"></script>

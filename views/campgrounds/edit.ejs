@@ -1,0 +1,75 @@
+<% layout('layouts/boilerplate') %>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <h2 class="text-center card-header">Edit Campground</h2>
+                <div class="card-body">
+                    <form class="validated-form" novalidate method="POST"
+                        action="/campgrounds/<%= campground._id %>?_method=PUT" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" for="title">Title</label>
+                            <input class="form-control" type="text" name="campground[title]" id="title" required
+                                value="<%= campground.title %>">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="location">Location</label>
+                            <input class="form-control" type="text" name="campground[location]" id="location" required
+                                value="<%= campground.location %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image(s)</label>
+                            <input class="form-control" type="file" name="image" id="image" multiple>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="campground[price]" id="price" required
+                                    placeholder="0.00" value="<%= campground.price %>">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" name="campground[description]" id="description" required
+                                cols="30" rows="10"><%= campground.description %></textarea>
+                        </div>
+                        <div class="mt-4 mb-1 row">
+                            <div class="accordion mb-3" id="accordionExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                      Current Image(s)
+                                    </button>
+                                  </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body d-flex flex-wrap pb-0">
+                                    <% campground.images.forEach(function(img, i) { %>
+                                        <div class="col-6 text-center p-0 mb-3">
+                                            <div style="max-width:150px;" class="card m-auto">
+                                                <img src="<%= img.thumbnail %> " alt="">
+                                                <div class="card-footer">
+                                                    <div class="form-check-inline">
+                                                        <input type="checkbox" name="deleteImages[]" id="image-<%= i %>"
+                                                        value="<%= img.filename %>">
+                                                    </div>
+                                                    <label for="image-<%= i %>"><i class="fa fa-trash"></i></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 d-flex">
+                            <button class="btn btn-info text-white">Update Campground</button>
+                            <div class="ms-auto">
+                                <a href="/campgrounds/<%= campground._id %>" class="btn btn-danger text-white">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,109 @@
+<% layout('layouts/boilerplate') %> 
+
+<% if (campgrounds.length) { %> 
+    <h1 class="text-center mb-3">My Campgrounds</h1>
+    <div class="container-fluid">
+    <div class="row" id="campContainer">
+    <% for(let campground of campgrounds) { %>
+        <div class="card my-3 order-1" id="id<%= campground._id %>">
+            <div class="row">
+                <div class="col-12 col-md-5 col-lg-4 col-xl-3 text-center text-lg-start p-0">
+                    <% if(campground.images.length) { %> 
+                        <img class="img-fluid" src="<%= campground.images[0].cardImage %> " alt="Campground Image">
+                    <% } else { %> 
+                        <img src="" alt="">
+                    <% } %> 
+                </div>
+                <div class=" col-md-7 col-lg-8 col-xl-9 p-0">
+                    <div class="card-body h-100 d-flex flex-column">
+                        <h5 class="card-title mb-2"><%= campground.title %>
+                            <% if(campground.reviews.length)  { %> 
+                            <span class="float-end">Rating: <span class="badge bg-secondary rounded-pill">
+                            <%= campground.properties.avgRating %> 
+                            </span></span>
+                            <% } %> 
+                        </h5>
+                        <p class="card-text mb-2 mb-lg-3">
+                            <small class="text-muted"><%= campground.location %></small>
+                        </p>
+                        <p class="card-text mb-2 mb-lg-3"><%= campground.properties.shortDescription %> </p>
+                        <p class="card-text mb-2 float-right">
+                            <strong >$<%= campground.price %> / night</strong>
+                        </p>
+                        <div class="mt-auto">
+                            <a class="btn btn-primary" href="/campgrounds/<%= campground._id %> ">Show More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %> 
+    </div>
+    </div>
+<% } else { %>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <h2 class="text-center card-header">Create your first Campground</h2>
+                <div class="card-body">
+                    <form class="validated-form" method="POST" action="/campgrounds" novalidate
+                        enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" for="title">Title</label>
+                            <input class="form-control" type="text" name="campground[title]" id="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="location">Location</label>
+                            <input class="form-control" type="text" name="campground[location]" id="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image(s)</label>
+                            <input class="form-control" type="file" name="image" id="image" multiple>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="campground[price]" id="price"
+                                    placeholder="0.00" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" name="campground[description]" id="description" required
+                                cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-success">Add Campground</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %> 
+
+<script>
+
+const campImages = document.querySelectorAll('#campContainer img');
+let testBool = true;
+
+window.addEventListener('resize', function(event) {
+    if(window.innerWidth <= 768 && testBool){
+        campImages.forEach(img => {
+            let imgSource = img.attributes.src.value;
+            imgSource = imgSource.replace('/upload/c_fill,w_300,h_300', '/upload');
+            img.setAttribute('src', imgSource);
+        })
+        testBool = !testBool;
+    }
+    if(window.innerWidth > 768 && !testBool){
+        campImages.forEach(img => {
+            let imgSource = img.attributes.src.value;
+            imgSource = imgSource.replace('/upload', '/upload/c_fill,w_300,h_300');
+            img.setAttribute('src', imgSource);
+        })
+        testBool = !testBool;
+    }
+})
+</script>
