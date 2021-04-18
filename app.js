@@ -183,7 +183,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
+const port = proces.env.PORT || 3000;
 // Start Up Server
-app.listen(3000, () => {
-    console.log("SERVING ON PORT 3000");
+app.listen(port, () => {
+    console.log(`SERVING ON PORT ${port}`);
 })
